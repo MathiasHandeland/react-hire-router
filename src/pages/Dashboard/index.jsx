@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react'
 import PeopleList from './components/PeopleList'
 
 function Dashboard(props) {
@@ -12,7 +11,7 @@ function Dashboard(props) {
       </section>
       <section>
         <h2>Hired People</h2>
-        <PeopleList people={hiredPeople} />
+        <PeopleList people={hiredPeople} showWage={true} isHired={true} />
       </section>
     </main>
   )

@@ -6,16 +6,22 @@ import { Routes, Route } from 'react-router-dom'
 import PersonProfile from './pages/PersonProfile'
 
 export default function App() {
-  const [hiredPeople, setHiredPeople] = useState([])
-  const [people, setPeople] = useState([])
+  const [data, setData] = useState([])
   const url = 'https://randomuser.me/api/?results=50';
 
-   useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(url)
-        const data = await response.json()
-        setPeople(data.results)
+        const json = await response.json()
+        // initialize data with index and wage
+        const initialData = json.results.map((person, index) => ({
+          firstName: person.name.first,
+          lastName: person.name.last,
+          wage: null,
+          index
+        }))
+        setData(initialData)
       } catch (error) {
         console.error('Failed to fetch people:', error)
       }
@@ -23,18 +29,16 @@ export default function App() {
     fetchData()
   }, [])
 
-  function hirePerson(person, wage) {
-    setHiredPeople(prev => {
-      // If person is already hired, update wage
-      if (prev.some(p => p.id === person.id)) {
-        return prev.map(p =>
-          p.id === person.id ? { ...p, wage } : p
-        )
-      }
-      // Otherwise, add to hiredPeople
-      return [...prev, { ...person, wage }]
-    })
-  }
+
+  function hirePerson(index, wage) {
+    setData(prevData =>
+      prevData.map(person =>
+        person.index === index ? { ...person, wage } : person
+      )
+    )
+  } 
+
+  const hiredList = data.filter(p => p.wage)
 
   return (
     <>
@@ -49,8 +53,8 @@ export default function App() {
         </nav>
         <main>
           <Routes>
-            <Route path="/" element={<Dashboard hiredPeople={hiredPeople} people={people} />} />
-            <Route path="/view/:id" element={<PersonProfile people={people} hirePerson={hirePerson} hiredPeople={hiredPeople} />} />
+            <Route path="/" element={<Dashboard hiredPeople={hiredList} people={data} />} />
+            <Route path="/view/:id" element={<PersonProfile people={data} hirePerson={hirePerson} />} />
           </Routes>
         </main>
       </header>

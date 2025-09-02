@@ -1,15 +1,31 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
-function PeopleListItem( {person, index} ) {
+function PeopleListItem({ personObj, index, showWage = false, isHired = false }) {
+  const navigate = useNavigate();
+
+  const handleEditClick = () => {
+    navigate(`/view/${index}`);
+  }
 
   return (
     <li>
-      <Link to={`/view/${index}`} state={{ person }}>
-        <h3>
-          {person.name.first} {person.name.last}
-        </h3>
-      </Link>
-        {person.wage && <p>Wage: £{person.wage}</p>}
+      {isHired ? (
+        <>
+          <span>{personObj.firstName} {personObj.lastName}</span>
+          <button 
+            onClick={handleEditClick} 
+          >
+            Edit
+          </button>
+        </>
+      ) : (
+        <Link to={`/view/${index}`} state={{ personObj }}>
+          <h3>
+            {personObj.firstName} {personObj.lastName}
+          </h3>
+        </Link>
+      )}
+      {showWage && personObj.wage && <p>Wage: £{personObj.wage}</p>}
     </li>
   )
 }
