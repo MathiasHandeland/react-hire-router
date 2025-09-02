@@ -8,3 +8,21 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
 }
+
+header {
+  background-color: #828c97;
+  color: white;
+  padding: 20px 40px;
+  text-align: center;
+  font-size: large;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+

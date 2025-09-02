@@ -1,12 +1,21 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 function HireForm({ hirePerson, currentWage }) {
   const [wage, setWage] = useState(currentWage || '')
 
+  useEffect(() => {
+    setWage(currentWage || '')
+  }, [currentWage])
+
   function handleSubmit(event) {
     event.preventDefault()
-    if (!wage) return alert("Please enter wage")
-    hirePerson(wage)
+
+    const numericWage = Number(wage)
+    if (!wage || numericWage <= 0) {
+      return alert("Please enter a wage greater than 0")
+    }
+
+    hirePerson(numericWage) 
   }
 
   return (

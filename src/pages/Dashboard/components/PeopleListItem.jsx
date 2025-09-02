@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom"
 
-function PeopleListItem({ personObj, index, showWage = false, isHired = false }) {
+function PeopleListItem({ person, index, showWage = false, isHired = false }) {
   const navigate = useNavigate();
 
   const handleEditClick = () => {
@@ -8,26 +8,23 @@ function PeopleListItem({ personObj, index, showWage = false, isHired = false })
   }
 
   return (
-    <li>
+    <li style={{ marginBottom: '10px' }}>
       {isHired ? (
         <>
-          <span>{personObj.firstName} {personObj.lastName}</span>
-          <button 
-            onClick={handleEditClick} 
-          >
+          <span>{person.firstName} {person.lastName}</span>
+          <button onClick={handleEditClick} style={{ marginLeft: '10px' }}>
             Edit
           </button>
         </>
       ) : (
-        <Link to={`/view/${index}`} state={{ personObj }}>
-          <h3>
-            {personObj.firstName} {personObj.lastName}
-          </h3>
+        <Link to={`/view/${index}`} state={{ person }}>
+          <h3>{person.firstName} {person.lastName}</h3>
         </Link>
       )}
-      {showWage && personObj.wage && <p>Wage: £{personObj.wage}</p>}
+      {showWage && person.wage && <p>Wage: £{person.wage}</p>}
     </li>
   )
 }
+
 
 export default PeopleListItem

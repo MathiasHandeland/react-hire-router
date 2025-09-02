@@ -2,23 +2,23 @@ import { useParams, useNavigate } from "react-router-dom";
 import HireForm from './components/HireForm'
 
 function PersonProfile({ people, hirePerson }) {
-  const { id } = useParams();
-  const personObj = people.find(p => p.index === Number(id))
+  const { id } = useParams(); // gets the id from the URL
+  const person = people.find(p => p.index === Number(id)) // finds the person by id
   const navigate = useNavigate();
 
-  if (!personObj) return <p>Loading...</p>
+  if (!person) return <p>Loading...</p>
 
   const handleHire = (wage) => {
-    hirePerson(personObj.index, wage)
+    hirePerson(person.index, wage)
     navigate('/')
   }
   
   return (
     <article>
       <h2>
-        {personObj.firstName} {personObj.lastName}
+        {person.firstName} {person.lastName}
       </h2>
-      <HireForm person={personObj} hirePerson={handleHire} currentWage={personObj.wage} />
+      <HireForm person={person} hirePerson={handleHire} currentWage={person.wage} />
     </article>
   )
 }

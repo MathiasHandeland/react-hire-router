@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import Dashboard from './pages/Dashboard'
-import { Link } from 'react-router-dom'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Link } from 'react-router-dom'
 import PersonProfile from './pages/PersonProfile'
 
 export default function App() {
-  const [data, setData] = useState([])
+  const [people, setPeople] = useState([]) // stores non-hired people
+  const [hiredPeople, setHiredPeople] = useState([]) // stores hired people + wage
   const url = 'https://randomuser.me/api/?results=50';
 
   useEffect(() => {
@@ -14,14 +14,12 @@ export default function App() {
       try {
         const response = await fetch(url)
         const json = await response.json()
-        // initialize data with index and wage
-        const initialData = json.results.map((person, index) => ({
+        const initialPeople = json.results.map((person, index) => ({
           firstName: person.name.first,
           lastName: person.name.last,
-          wage: null,
           index
         }))
-        setData(initialData)
+        setPeople(initialPeople)
       } catch (error) {
         console.error('Failed to fetch people:', error)
       }
@@ -29,35 +27,42 @@ export default function App() {
     fetchData()
   }, [])
 
-
   function hirePerson(index, wage) {
-    setData(prevData =>
-      prevData.map(person =>
-        person.index === index ? { ...person, wage } : person
+  // Check if the person is already hired
+  const alreadyHired = hiredPeople.find(p => p.index === index)
+
+  if (alreadyHired) {
+    // Update wage
+    setHiredPeople(prev =>
+      prev.map(p =>
+        p.index === index ? { ...p, wage } : p
       )
     )
-  } 
-
-  const hiredList = data.filter(p => p.wage)
+  } else {
+    // hire person: remove from people and add to hiredPeople with given wage
+    const personToHire = people.find(p => p.index === index)
+    if (!personToHire) return
+    setPeople(prev => prev.filter(p => p.index !== index))
+    setHiredPeople(prev => [...prev, { ...personToHire, wage }])
+  }
+}
 
   return (
     <>
-        <header>
-          <h1>Hire Your Team</h1> 
-          <nav>
-            <div>
-              <ul>
-                <li><Link to="/">Dashboard</Link></li>
-              </ul>
-            </div>
+      <header>
+        <h1>Hire Your Team</h1> 
+        <nav>
+          <ul>
+            <li><Link to="/">Dashboard</Link></li>
+          </ul>
         </nav>
-        <main>
-          <Routes>
-            <Route path="/" element={<Dashboard hiredPeople={hiredList} people={data} />} />
-            <Route path="/view/:id" element={<PersonProfile people={data} hirePerson={hirePerson} />} />
-          </Routes>
-        </main>
       </header>
+      <main>
+        <Routes>
+          <Route path="/" element={<Dashboard hiredPeople={hiredPeople} people={people} />} />
+          <Route path="/view/:id" element={<PersonProfile people={[...people, ...hiredPeople]} hirePerson={hirePerson} />} />
+        </Routes>
+      </main>
     </>
   )
 }

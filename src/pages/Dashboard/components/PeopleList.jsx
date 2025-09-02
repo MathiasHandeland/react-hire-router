@@ -4,8 +4,8 @@ function PeopleList({ people, showWage = false, isHired = false }) {
 
   return (
     <ul>
-      {people.map((personObj) => (
-        <PeopleListItem key={personObj.index} personObj={personObj} index={personObj.index} showWage={showWage} isHired={isHired} />
+      {people.map((person) => (
+        <PeopleListItem key={person.index} person={person} index={person.index} showWage={showWage} isHired={isHired} />
       ))}
     </ul>
   )
