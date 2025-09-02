@@ -1,3 +1,5 @@
+import PeopleList from './components/PeopleList'
+
 function Dashboard({ people, hiredPeople }) {
   return (
     <main className="dashboard-layout">
@@ -13,5 +15,4 @@ function Dashboard({ people, hiredPeople }) {
   )
 }
 
-import PeopleList from './components/PeopleList'
 export default Dashboard

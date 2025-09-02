@@ -13,13 +13,14 @@ export default function App() {
     const fetchData = async () => {
       try {
         const response = await fetch(url)
-        const json = await response.json()
-        const initialPeople = json.results.map((person, index) => ({
+        const data = await response.json()
+        const randomPeople = data.results.map((person, id) => ({
           firstName: person.name.first,
           lastName: person.name.last,
-          index
+          id,
+          wage: 0
         }))
-        setPeople(initialPeople)
+        setPeople(randomPeople)
       } catch (error) {
         console.error('Failed to fetch people:', error)
       }
@@ -27,25 +28,25 @@ export default function App() {
     fetchData()
   }, [])
 
-  function hirePerson(index, wage) {
-  // Check if the person is already hired
-  const alreadyHired = hiredPeople.find(p => p.index === index)
+  function hirePerson(id, wage) {
+    // Check if the person is already hired
+    const alreadyHired = hiredPeople.find(p => p.id === id)
 
-  if (alreadyHired) {
-    // Update wage
-    setHiredPeople(prev =>
-      prev.map(p =>
-        p.index === index ? { ...p, wage } : p
+    if (alreadyHired) {
+      // Update wage
+      setHiredPeople(prev =>
+        prev.map(p =>
+          p.id === id ? { ...p, wage } : p
+        )
       )
-    )
-  } else {
-    // hire person: remove from people and add to hiredPeople with given wage
-    const personToHire = people.find(p => p.index === index)
-    if (!personToHire) return
-    setPeople(prev => prev.filter(p => p.index !== index))
-    setHiredPeople(prev => [...prev, { ...personToHire, wage }])
+    } else {
+      // hire the person: remove from people and add to hiredPeople with given wage
+      const personToHire = people.find(p => p.id === id)
+      if (!personToHire) return
+      setPeople(prev => prev.filter(p => p.id !== id))
+      setHiredPeople(prev => [...prev, { ...personToHire, wage }])
+    }
   }
-}
 
   return (
     <>

@@ -3,13 +3,13 @@ import HireForm from './components/HireForm'
 
 function PersonProfile({ people, hirePerson }) {
   const { id } = useParams(); // gets the id from the URL
-  const person = people.find(p => p.index === Number(id)) // finds the person by id
+  const person = people.find(p => p.id === Number(id)) // finds the person by id
   const navigate = useNavigate();
 
   if (!person) return <p>Loading...</p>
 
-  const handleHire = (wage) => {
-    hirePerson(person.index, wage)
+  const handleHiring = (wage) => {
+    hirePerson(person.id, wage)
     navigate('/')
   }
   
@@ -18,7 +18,7 @@ function PersonProfile({ people, hirePerson }) {
       <h2>
         {person.firstName} {person.lastName}
       </h2>
-      <HireForm person={person} hirePerson={handleHire} currentWage={person.wage} />
+      <HireForm person={person} hirePerson={handleHiring} currentWage={person.wage} />
     </article>
   )
 }
